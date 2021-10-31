@@ -35,15 +35,12 @@ function Tables() {
 
   // setup pages control for every table
   const [pageTable1, setPageTable1] = useState(1);
-  const [pageTable2, setPageTable2] = useState(1);
-
-  // setup data for every table
-  const [dataTable1, setDataTable1] = useState([]);
-  const [dataTable2, setDataTable2] = useState([]);
 
   const [dataset, setDataset] = useState([]);
+  const [pagedDataset, setPagedDataset] = useState([]);
 
-  const [checkedFeatures, setCheckedFeatures] = useState(new Set());
+  const [features, setFeatures] = useState([]);
+  const [checkedFeatures, setCheckedFeatures] = useState({});
 
   // pagination setup
   const resultsPerPage = 10;
@@ -54,110 +51,145 @@ function Tables() {
     setPageTable1(p);
   }
 
-  // pagination change control
-  function onPageChangeTable2(p) {
-    setPageTable2(p);
-  }
-
   // on page change, load new sliced data
   // here you would make another server request for new data
   useEffect(() => {
-    setDataTable1(
-      response.slice(
+    setPagedDataset(
+      dataset.slice(
+        (pageTable1 - 1) * resultsPerPage,
+        pageTable1 * resultsPerPage
+      )
+    );
+    console.log(
+      dataset.slice(
         (pageTable1 - 1) * resultsPerPage,
         pageTable1 * resultsPerPage
       )
     );
   }, [pageTable1]);
 
-  // on page change, load new sliced data
-  // here you would make another server request for new data
-  useEffect(() => {
-    setDataTable2(
-      response2.slice(
-        (pageTable2 - 1) * resultsPerPage,
-        pageTable2 * resultsPerPage
-      )
-    );
-  }, [pageTable2]);
-
   const updateDataset = (newDataset) => {
+    if(newDataset.length < 1) {
+      setDataset([]);
+      setFeatures([]);
+      setCheckedFeatures({});
+      setPagedDataset([]);
+      return;
+    }
     const parsedData = newDataset.map((datapoint) => datapoint.data);
-    console.log(parsedData);
-    setCheckedFeatures(new Set(parsedData[0]));
-    setDataset(parsedData);
+    setDataset(parsedData.slice(1));
+    const parsedFeatures = parsedData[0].reduce(
+      (o, key, i) => ({ ...o, [key]: true, [i]: true }),
+      {}
+    );
+    setFeatures(parsedData[0]);
+    setCheckedFeatures(parsedFeatures);
+    setPagedDataset(parsedData.slice(1, 10));
+  };
+
+  const updateCheckedFeatures = (feature, index) => {
+    console.log({
+      ...checkedFeatures,
+      [feature]: !checkedFeatures[feature],
+      [index]: !checkedFeatures[index],
+    });
+    setCheckedFeatures({
+      ...checkedFeatures,
+      [feature]: !checkedFeatures[feature],
+      [index]: !checkedFeatures[index],
+    });
   };
 
   return (
     <>
       <PageTitle>Datasets</PageTitle>
 
-      <CTA />
-
       <CSVReader2 updateDataset={(dataset) => updateDataset(dataset)} />
 
-      <SectionTitle>Dataset Features</SectionTitle>
-      <TableContainer className="mb-8 p-4">
-        <TableHeader>
-
-            {dataset[0] &&
-              dataset[0].map((feature, index) => (
+      {features.length > 0 && (
+        <>
+          <SectionTitle>Dataset Features</SectionTitle>
+          <TableContainer className="mb-8 p-4">
+            <TableHeader>
+              {features.map((feature, index) => (
                 <label className="inline-flex items-center">
-                  <Input type="checkbox" checked={checkedFeatures.has(feature)} />
-                  <TableCell className="pl-1" key={index}>
+                  <Input
+                    type="checkbox"
+                    checked={checkedFeatures[feature]}
+                    onChange={() => updateCheckedFeatures(feature, index)}
+                  />
+                  <TableCell
+                    className={`pl-1 ${
+                      !checkedFeatures[feature] && "text-gray-400"
+                    }`}
+                    key={index}
+                  >
                     {feature}
                   </TableCell>
                 </label>
               ))}
+            </TableHeader>
+          </TableContainer>
+        </>
+      )}
 
-        </TableHeader>
-      </TableContainer>
+      {pagedDataset.length > 0 && (
+        <>
+          <SectionTitle>Filtered Dataset</SectionTitle>
+          <TableContainer className="mb-8">
+            <Table>
+              <TableHeader>
+                <tr>
+                  <TableCell key={"rowNum"}>#</TableCell>
 
-      <SectionTitle>Filtered Dataset</SectionTitle>
-      <TableContainer className="mb-8">
-        <Table>
-          <TableHeader>
-            <tr>
-              <TableCell key={"rowNum"}>#</TableCell>
-
-              {dataset[0] &&
-                dataset[0].map((feature, index) => (
-                  <TableCell key={index}>{feature}</TableCell>
-                ))}
-            </tr>
-          </TableHeader>
-          <TableBody>
-            {dataset &&
-              dataset.slice(1, 11).map((columnArray, colIndex) => (
-                <TableRow key={colIndex + "_col"}>
-                  <TableCell className="bg-gray-50">
-                    <span key={colIndex + "_rowNum"} className="text-sm">
-                      {colIndex + 1}
-                    </span>
-                  </TableCell>
-                  {columnArray.map((row, rowIndex) => (
-                    <TableCell>
+                  {features &&
+                    features.map(
+                      (feature, index) =>
+                        checkedFeatures[feature] && (
+                          <TableCell key={index}>{feature}</TableCell>
+                        )
+                    )}
+                </tr>
+              </TableHeader>
+              <TableBody>
+                {pagedDataset.map((columnArray, colIndex) => (
+                  <TableRow key={colIndex + "_col"}>
+                    <TableCell className="bg-gray-50 dark:bg-gray-700">
                       <span
-                        key={colIndex + "_" + rowIndex + "_row"}
-                        className="text-sm"
+                        key={colIndex + "_rowNum"}
+                        className="text-sm text-gray-400"
                       >
-                        {row}
+                        {colIndex + 1}
                       </span>
                     </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-        <TableFooter>
-          <Pagination
-            totalResults={totalResults}
-            resultsPerPage={resultsPerPage}
-            onChange={onPageChangeTable1}
-            label="Table navigation"
-          />
-        </TableFooter>
-      </TableContainer>
+                    {columnArray.map(
+                      (rowValue, rowIndex) =>
+                        checkedFeatures[rowIndex] && (
+                          <TableCell>
+                            <span
+                              key={colIndex + "_" + rowIndex + "_row"}
+                              className="text-sm"
+                            >
+                              {rowValue}
+                            </span>
+                          </TableCell>
+                        )
+                    )}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            <TableFooter>
+              <Pagination
+                totalResults={totalResults}
+                resultsPerPage={resultsPerPage}
+                onChange={onPageChangeTable1}
+                label="Table navigation"
+              />
+            </TableFooter>
+          </TableContainer>
+        </>
+      )}
     </>
   );
 }
