@@ -4,7 +4,7 @@ function CTA() {
   return (
     <a
       className="flex items-center justify-between p-4 mb-8 text-sm font-semibold text-purple-100 bg-purple-600 rounded-lg shadow-md focus:outline-none focus:shadow-outline-purple"
-      href="https://github.com/estevanmaito/windmill-dashboard-react"
+      href="https://github.com/devalparikh/AutoMLProcessor"
     >
       <div className="flex items-center">
         <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -13,7 +13,7 @@ function CTA() {
         <span>Star this project on GitHub</span>
       </div>
       <span>
-        View more <span dangerouslySetInnerHTML={{ __html: '&RightArrow;' }}></span>
+        View more
       </span>
     </a>
   )
