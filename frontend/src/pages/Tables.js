@@ -84,7 +84,7 @@ function Tables() {
     );
     setFeatures(parsedData[0]);
     setCheckedFeatures(parsedFeatures);
-    setPagedDataset(parsedData.slice(1, 10));
+    setPagedDataset(parsedData.slice(1, 11));
   };
 
   const updateCheckedFeatures = (feature, index) => {
@@ -159,7 +159,7 @@ function Tables() {
                         key={colIndex + "_rowNum"}
                         className="text-sm text-gray-400"
                       >
-                        {colIndex + 1}
+                        {colIndex + 1 + (pageTable1-1)*10}
                       </span>
                     </TableCell>
                     {columnArray.map(
