@@ -15,9 +15,7 @@ import {
 
 import CSVReader2 from "../components/Datasets/CSVReader2";
 
-
 function Tables() {
-
   // setup pages control for every table
   const [pageTable1, setPageTable] = useState(1);
 
@@ -54,7 +52,7 @@ function Tables() {
   }, [pageTable1]);
 
   const updateDataset = (newDataset) => {
-    if(newDataset.length < 1) {
+    if (newDataset.length < 1) {
       setDataset([]);
       setFeatures([]);
       setCheckedFeatures({});
@@ -144,7 +142,7 @@ function Tables() {
                         key={colIndex + "_rowNum"}
                         className="text-sm text-gray-400"
                       >
-                        {colIndex + 1 + (pageTable1-1)*10}
+                        {colIndex + 1 + (pageTable1 - 1) * 10}
                       </span>
                     </TableCell>
                     {columnArray.map(
