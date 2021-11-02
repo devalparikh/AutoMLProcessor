@@ -13,14 +13,13 @@ import {
   Pagination,
 } from "@windmill/react-ui";
 
-import response from "../utils/demo/tableData";
 import CSVReader2 from "../components/Datasets/CSVReader2";
 
 
 function Tables() {
 
   // setup pages control for every table
-  const [pageTable1, setPageTable1] = useState(1);
+  const [pageTable1, setPageTable] = useState(1);
 
   const [dataset, setDataset] = useState([]);
   const [pagedDataset, setPagedDataset] = useState([]);
@@ -33,8 +32,8 @@ function Tables() {
   const totalResults = dataset.length - 1;
 
   // pagination change control
-  function onPageChangeTable1(p) {
-    setPageTable1(p);
+  function onPageChangeTable(p) {
+    setPageTable(p);
   }
 
   // on page change, load new sliced data
@@ -169,7 +168,7 @@ function Tables() {
               <Pagination
                 totalResults={totalResults}
                 resultsPerPage={resultsPerPage}
-                onChange={onPageChangeTable1}
+                onChange={onPageChangeTable}
                 label="Table navigation"
               />
             </TableFooter>
