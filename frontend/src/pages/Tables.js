@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-
 import PageTitle from "../components/Typography/PageTitle";
 import SectionTitle from "../components/Typography/SectionTitle";
-import CTA from "../components/CTA";
 import {
   Table,
   TableHeader,
@@ -11,27 +9,15 @@ import {
   TableRow,
   TableFooter,
   TableContainer,
-  Badge,
-  Avatar,
-  Button,
   Input,
   Pagination,
 } from "@windmill/react-ui";
-import { EditIcon, TrashIcon } from "../icons";
 
 import response from "../utils/demo/tableData";
 import CSVReader2 from "../components/Datasets/CSVReader2";
-// make a copy of the data, for the second table
-const response2 = response.concat([]);
+
 
 function Tables() {
-  /**
-   * DISCLAIMER: This code could be badly improved, but for the sake of the example
-   * and readability, all the logic for both table are here.
-   * You would be better served by dividing each table in its own
-   * component, like Table(?) and TableWithActions(?) hiding the
-   * presentation details away from the page view.
-   */
 
   // setup pages control for every table
   const [pageTable1, setPageTable1] = useState(1);
