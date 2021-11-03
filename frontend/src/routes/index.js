@@ -47,7 +47,7 @@ const routes = [
     component: Modals,
   },
   {
-    path: '/tables',
+    path: '/datasets',
     component: Tables,
   },
   {

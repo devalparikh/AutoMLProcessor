@@ -15,9 +15,9 @@ import {
 
 import CSVReader2 from "../components/Datasets/CSVReader2";
 
-function Tables() {
+function Datasets() {
   // setup pages control for every table
-  const [pageTable1, setPageTable] = useState(1);
+  const [pageTable, setPageTable] = useState(1);
 
   const [dataset, setDataset] = useState([]);
   const [pagedDataset, setPagedDataset] = useState([]);
@@ -39,17 +39,17 @@ function Tables() {
   useEffect(() => {
     setPagedDataset(
       dataset.slice(
-        (pageTable1 - 1) * resultsPerPage,
-        pageTable1 * resultsPerPage
+        (pageTable - 1) * resultsPerPage,
+        pageTable * resultsPerPage
       )
     );
     console.log(
       dataset.slice(
-        (pageTable1 - 1) * resultsPerPage,
-        pageTable1 * resultsPerPage
+        (pageTable - 1) * resultsPerPage,
+        pageTable * resultsPerPage
       )
     );
-  }, [pageTable1]);
+  }, [pageTable]);
 
   const updateDataset = (newDataset) => {
     if (newDataset.length < 1) {
@@ -142,7 +142,7 @@ function Tables() {
                         key={colIndex + "_rowNum"}
                         className="text-sm text-gray-400"
                       >
-                        {colIndex + 1 + (pageTable1 - 1) * 10}
+                        {colIndex + 1 + (pageTable - 1) * 10}
                       </span>
                     </TableCell>
                     {columnArray.map(
@@ -177,4 +177,4 @@ function Tables() {
   );
 }
 
-export default Tables;
+export default Datasets;
