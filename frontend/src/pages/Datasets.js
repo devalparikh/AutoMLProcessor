@@ -16,7 +16,7 @@ import {
 import CSVReader2 from "../components/Datasets/CSVReader2";
 
 function Datasets() {
-  // setup pages control for every table
+  // setup pages control for every lo
   const [pageTable, setPageTable] = useState(1);
 
   const [dataset, setDataset] = useState([]);
