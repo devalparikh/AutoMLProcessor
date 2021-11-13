@@ -13,10 +13,14 @@ import {
   Pagination,
 } from "@windmill/react-ui";
 
+import { Button } from "@windmill/react-ui";
+
 import CSVReader2 from "../components/Datasets/CSVReader2";
+import { GithubIcon } from "../icons";
+import CodeEditor from "../components/Code/CodeEditor";
+import sampleCode from "../../src/components/Code/sampleCode.txt";
 
 function Datasets() {
-  // setup pages control for every lo
   const [pageTable, setPageTable] = useState(1);
 
   const [dataset, setDataset] = useState([]);
@@ -24,6 +28,8 @@ function Datasets() {
 
   const [features, setFeatures] = useState([]);
   const [checkedFeatures, setCheckedFeatures] = useState({});
+
+  const [generatedCode, setGeneratedCode] = useState("");
 
   // pagination setup
   const resultsPerPage = 10;
@@ -81,6 +87,14 @@ function Datasets() {
       [feature]: !checkedFeatures[feature],
       [index]: !checkedFeatures[index],
     });
+  };
+
+  const handleGenerateCode = () => {
+    fetch(sampleCode)
+      .then((r) => r.text())
+      .then((text) => {
+        setGeneratedCode(text);
+      });
   };
 
   return (
@@ -171,6 +185,12 @@ function Datasets() {
               />
             </TableFooter>
           </TableContainer>
+          <div className="my-6 flex justify-center">
+            <Button onClick={handleGenerateCode} iconRight={GithubIcon}>
+              Generate Code
+            </Button>
+          </div>
+          <CodeEditor code={generatedCode} />
         </>
       )}
     </>
