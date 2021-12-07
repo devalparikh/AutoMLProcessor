@@ -1,1 +1,11 @@
+frontend/.eslintcache
+
+node_modules/
+
 .DS_Store
+
+frontend/.env
+
+backend/.env
+
+.vscode
