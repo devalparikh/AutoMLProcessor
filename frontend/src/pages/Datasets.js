@@ -1,24 +1,12 @@
 import React, { useState, useEffect } from "react";
 import PageTitle from "../components/Typography/PageTitle";
-import SectionTitle from "../components/Typography/SectionTitle";
-import {
-  Table,
-  TableHeader,
-  TableCell,
-  TableBody,
-  TableRow,
-  TableFooter,
-  TableContainer,
-  Input,
-  Pagination,
-} from "@windmill/react-ui";
-
-import { Button } from "@windmill/react-ui";
 
 import CSVReader2 from "../components/Datasets/CSVReader2";
-import { GithubIcon } from "../icons";
 import CodeEditor from "../components/Code/CodeEditor";
 import sampleCode from "../../src/components/Code/sampleCode.txt";
+import GenerateCodeButton from "../components/Buttons/GenerateCodeButton";
+import DatasetsTable from "../components/Table/DatasetsTable";
+import FeaturesTable from "../components/Table/FeaturesTable";
 
 function Datasets() {
   const [pageTable, setPageTable] = useState(1);
@@ -104,92 +92,30 @@ function Datasets() {
       <CSVReader2 updateDataset={(dataset) => updateDataset(dataset)} />
 
       {features.length > 0 && (
-        <>
-          <SectionTitle>Dataset Features</SectionTitle>
-          <TableContainer className="mb-8 p-4">
-            <TableHeader>
-              {features.map((feature, index) => (
-                <label className="inline-flex items-center">
-                  <Input
-                    type="checkbox"
-                    checked={checkedFeatures[feature]}
-                    onChange={() => updateCheckedFeatures(feature, index)}
-                  />
-                  <TableCell
-                    className={`pl-1 ${
-                      !checkedFeatures[feature] && "text-gray-400"
-                    }`}
-                    key={index}
-                  >
-                    {feature}
-                  </TableCell>
-                </label>
-              ))}
-            </TableHeader>
-          </TableContainer>
-        </>
+        <FeaturesTable
+          checkedFeatures={checkedFeatures}
+          features={features}
+          title={"Dataset Features"}
+          updateCheckedFeatures={updateCheckedFeatures}
+        />
       )}
 
       {pagedDataset.length > 0 && (
         <>
-          <SectionTitle>Filtered Dataset</SectionTitle>
-          <TableContainer className="mb-8">
-            <Table>
-              <TableHeader>
-                <tr>
-                  <TableCell key={"rowNum"}>#</TableCell>
-
-                  {features &&
-                    features.map(
-                      (feature, index) =>
-                        checkedFeatures[feature] && (
-                          <TableCell key={index}>{feature}</TableCell>
-                        )
-                    )}
-                </tr>
-              </TableHeader>
-              <TableBody>
-                {pagedDataset.map((columnArray, colIndex) => (
-                  <TableRow key={colIndex + "_col"}>
-                    <TableCell className="bg-gray-50 dark:bg-gray-700">
-                      <span
-                        key={colIndex + "_rowNum"}
-                        className="text-sm text-gray-400"
-                      >
-                        {colIndex + 1 + (pageTable - 1) * 10}
-                      </span>
-                    </TableCell>
-                    {columnArray.map(
-                      (rowValue, rowIndex) =>
-                        checkedFeatures[rowIndex] && (
-                          <TableCell>
-                            <span
-                              key={colIndex + "_" + rowIndex + "_row"}
-                              className="text-sm"
-                            >
-                              {rowValue}
-                            </span>
-                          </TableCell>
-                        )
-                    )}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            <TableFooter>
-              <Pagination
-                totalResults={totalResults}
-                resultsPerPage={resultsPerPage}
-                onChange={onPageChangeTable}
-                label="Table navigation"
-              />
-            </TableFooter>
-          </TableContainer>
-          <div className="my-6 flex justify-center">
-            <Button onClick={handleGenerateCode} iconRight={GithubIcon}>
-              Generate Code
-            </Button>
-          </div>
+          <DatasetsTable
+            checkedFeatures={checkedFeatures}
+            features={features}
+            resultsPerPage={resultsPerPage}
+            onPageChangeTable={onPageChangeTable}
+            pagedDataset={pagedDataset}
+            pageTable={pageTable}
+            title={"Filtered Dataset"}
+            totalResults={totalResults}
+          />
+          <GenerateCodeButton
+            generatedCode={generatedCode}
+            handleGenerateCode={handleGenerateCode}
+          />
           <CodeEditor code={generatedCode} />
         </>
       )}
