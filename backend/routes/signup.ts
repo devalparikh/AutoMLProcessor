@@ -15,14 +15,14 @@ router.post(
       .isEmail()
       .withMessage("Email must be valid")
       .custom(async (email_value) => {
-        const existingEmail = await User.findOne({ 'email': email_value });
+        const existingEmail = await User.findOne({ email: email_value });
         if (existingEmail) return Promise.reject("Email in use");
       }),
     body("username")
       .notEmpty()
       .withMessage("User must be valid")
       .custom(async (username_value) => {
-        const existingUser = await User.findOne({ 'username': username_value });
+        const existingUser = await User.findOne({ username: username_value });
         if (existingUser) return Promise.reject("Username already exists");
       }),
     body("password")
